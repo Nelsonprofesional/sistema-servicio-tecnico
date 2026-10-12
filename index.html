@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Gestion de Servicios Tecnicos | Prototipo academico SENA</title>
+
+  <!-- Hoja de estilos (se creara en la siguiente etapa) -->
+  <link rel="stylesheet" href="css/styles.css">
+
+  <!-- JavaScript (se creara en la siguiente etapa); defer lo ejecuta al terminar de cargar el HTML -->
+  <script src="js/app.js" defer></script>
+</head>
+
+<body>
+
+  <!-- =====================================================
+       PANTALLA 1. INICIO DE SESION
+       Estructura independiente de la interfaz interna
+       ===================================================== -->
+  <section id="pantalla-inicio-sesion" class="pantalla pantalla-login" aria-labelledby="login-titulo">
+    <div class="login-contenedor">
+      <h1 id="login-titulo" class="login-titulo">Sistema de Gestión de Servicios Técnicos</h1>
+
+      <form id="form-login" class="form-login" action="#" method="post">
+        <div class="campo">
+          <label for="login-usuario">Usuario o correo electrónico</label>
+          <input type="text" id="login-usuario" name="usuario" placeholder="usuario@ejemplo.com" autocomplete="username" required>
+        </div>
+
+        <div class="campo">
+          <label for="login-clave">Contraseña</label>
+          <input type="password" id="login-clave" name="clave" placeholder="Escribe tu contraseña" autocomplete="current-password" required>
+        </div>
+
+        <button type="submit" id="btn-ingresar" class="boton boton-primario">Ingresar</button>
+      </form>
+
+      <p class="login-aviso">
+        Acceso demostrativo: este prototipo no utiliza autenticación real.
+      </p>
+    
+    </div>
+
+    <!-- Créditos del autor del prototipo -->
+    <div class="creditos-proyecto" aria-label="Autoría del prototipo">
+      <p>Creado por</p>
+      <p class="creditos-autor">
+        NELSON DAVID GUTIERREZ AGUIRRE
+      </p>
+      <p class="creditos-etiqueta">
+        Análisis y Desarrollo de Software (3388996)
+      </p>
+      <p>Prototipo 1 · Octubre 2026</p>
+    </div>
+  </section>
+
+  </section>
+  <!-- =====================================================
+       INTERFAZ INTERNA DE LA APLICACIÓN
+       Estructura común para las pantallas 2, 3, 4 y 5
+       ===================================================== -->
+  <div id="interfaz-interna" class="interfaz-interna">
+
+    <!-- A. ENCABEZADO SUPERIOR -->
+    <header id="encabezado-superior" class="encabezado-superior">
+      <div id="logo-espacio" class="logo-espacio" aria-label="Espacio reservado para el logotipo">
+        Logo
+      </div>
+
+      <p class="encabezado-titulo">Sistema de Gestión de Servicios Técnicos</p>
+
+      <div class="encabezado-usuario">
+        <span id="usuario-nombre" class="usuario-nombre">Usuario Demo</span>
+        <button type="button" id="btn-cerrar-sesion" class="boton boton-secundario">Cerrar sesión</button>
+      </div>
+    </header>
+
+    <div class="cuerpo-aplicacion">
+
+      <!-- B. MENÚ LATERAL -->
+      <aside id="menu-lateral" class="menu-lateral">
+        <nav aria-label="Menú principal">
+          <ul class="menu-lista">
+            <li><a href="#pantalla-panel-principal" class="menu-enlace" data-pantalla="pantalla-panel-principal">Panel principal</a></li>
+            <li><a href="#pantalla-solicitudes" class="menu-enlace" data-pantalla="pantalla-solicitudes">Solicitudes de servicio</a></li>
+            <li><a href="#pantalla-registrar-equipo" class="menu-enlace" data-pantalla="pantalla-registrar-equipo">Registrar equipo</a></li>
+          </ul>
+        </nav>
+      </aside>
+
+      <!-- C. ÁREA PRINCIPAL DE CONTENIDO
+           Más adelante, JavaScript mostrará una sola pantalla a la vez.
+           Por ahora todas están en el HTML para poder estudiarlas. -->
+      <main id="contenido-principal" class="contenido-principal">
+
+
+        <!-- =================================================
+             PANTALLA 2. PANEL PRINCIPAL
+             ================================================= -->
+        <section id="pantalla-panel-principal" class="pantalla pantalla-panel-principal" aria-labelledby="panel-titulo">
+          <h1 id="panel-titulo">Panel principal</h1>
+          <p class="pantalla-descripcion">Resumen del estado de las solicitudes de servicio técnico y accesos rápidos.</p>
+
+          <!-- Tarjetas informativas -->
+          <section class="tarjetas-resumen" aria-label="Resumen de solicitudes">
+            <article class="tarjeta tarjeta-abiertas">
+              <h2 class="tarjeta-titulo">Solicitudes abiertas</h2>
+              <p class="tarjeta-valor">12</p>
+            </article>
+            <article class="tarjeta tarjeta-diagnostico">
+              <h2 class="tarjeta-titulo">En diagnóstico</h2>
+              <p class="tarjeta-valor">4</p>
+            </article>
+            <article class="tarjeta tarjeta-reparacion">
+              <h2 class="tarjeta-titulo">En reparación</h2>
+              <p class="tarjeta-valor">5</p>
+            </article>
+            <article class="tarjeta tarjeta-listos">
+              <h2 class="tarjeta-titulo">Listos para entregar</h2>
+              <p class="tarjeta-valor">3</p>
+            </article>
+          </section>
+
+          <!-- Accesos rápidos -->
+          <nav class="accesos-rapidos" aria-label="Accesos rápidos">
+            <a href="#pantalla-solicitudes" class="boton boton-secundario" data-pantalla="pantalla-solicitudes">Ir a Solicitudes de servicio</a>
+            <a href="#pantalla-registrar-equipo" class="boton boton-primario" data-pantalla="pantalla-registrar-equipo">Ir a Registrar equipo</a>
+          </nav>
+
+          <!-- Tabla de solicitudes recientes -->
+          <section class="solicitudes-recientes" aria-labelledby="recientes-titulo">
+            <h2 id="recientes-titulo">Solicitudes recientes</h2>
+
+            <div class="tabla-contenedor">
+              <table id="tabla-solicitudes-recientes" class="tabla">
+                <caption class="solo-lectores">Últimas solicitudes de servicio registradas</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Número de ticket</th>
+                    <th scope="col">Equipo</th>
+                    <th scope="col">Cliente</th>
+                    <th scope="col">Estado</th>
+                    <th scope="col">Acción</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>ST-0001</td>
+                    <td>Portátil HP Pavilion</td>
+                    <td>Carlos Ejemplo</td>
+                    <td>En diagnóstico</td>
+                    <td><a href="#pantalla-detalle-solicitud" class="enlace-detalle" data-pantalla="pantalla-detalle-solicitud" aria-label="Ver detalle del ticket ST-0001">Ver detalle</a></td>
+                  </tr>
+                  <tr>
+                    <td>ST-0002</td>
+                    <td>Celular Samsung Galaxy A12</td>
+                    <td>María Prueba</td>
+                    <td>En reparación</td>
+                    <td><a href="#pantalla-detalle-solicitud" class="enlace-detalle" data-pantalla="pantalla-detalle-solicitud" aria-label="Ver detalle del ticket ST-0002">Ver detalle</a></td>
+                  </tr>
+                  <tr>
+                    <td>ST-0003</td>
+                    <td>Impresora Epson L3150</td>
+                    <td>Luis Demostración</td>
+                    <td>Listo para entregar</td>
+                    <td><a href="#pantalla-detalle-solicitud" class="enlace-detalle" data-pantalla="pantalla-detalle-solicitud" aria-label="Ver detalle del ticket ST-0003">Ver detalle</a></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </section>
+
+
+        <!-- =================================================
+             PANTALLA 3. SOLICITUDES DE SERVICIO
+             ================================================= -->
+        <section id="pantalla-solicitudes" class="pantalla pantalla-solicitudes" aria-labelledby="solicitudes-titulo">
+          <h1 id="solicitudes-titulo">Solicitudes de servicio</h1>
+          <p class="pantalla-descripcion">Consulta las solicitudes registradas y abre el detalle de cada una.</p>
+
+          <!-- Búsqueda y filtro -->
+          <form id="form-filtros" class="filtros" action="#" role="search" aria-label="Buscar y filtrar solicitudes">
+            <div class="campo">
+              <label for="buscar-solicitud">Buscar por número de ticket, equipo o cliente</label>
+              <input type="search" id="buscar-solicitud" name="busqueda" placeholder="Ej.: ST-0001, portátil, Carlos">
+            </div>
+
+            <div class="campo">
+              <label for="filtro-estado">Filtrar por estado</label>
+              <select id="filtro-estado" name="estado">
+                <option value="">Todos los estados</option>
+                <option value="abierta">Abierta</option>
+                <option value="diagnostico">En diagnóstico</option>
+                <option value="reparacion">En reparación</option>
+                <option value="listo">Listo para entregar</option>
+              </select>
+            </div>
+          </form>
+
+          <a href="#pantalla-registrar-equipo" class="boton boton-primario" data-pantalla="pantalla-registrar-equipo">Registrar equipo</a>
+
+          <!-- Tabla de solicitudes -->
+          <div class="tabla-contenedor">
+            <table id="tabla-solicitudes" class="tabla">
+              <caption class="solo-lectores">Listado de solicitudes de servicio</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Número de ticket</th>
+                  <th scope="col">Fecha de ingreso</th>
+                  <th scope="col">Equipo</th>
+                  <th scope="col">Cliente</th>
+                  <th scope="col">Prioridad</th>
+                  <th scope="col">Estado</th>
+                  <th scope="col">Técnico asignado</th>
+                  <th scope="col">Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>ST-0001</td>
+                  <td>2026-10-05</td>
+                  <td>Portátil HP Pavilion</td>
+                  <td>Carlos Ejemplo</td>
+                  <td>Alta</td>
+                  <td>En diagnóstico</td>
+                  <td>Técnico Uno</td>
+                  <td><a href="#pantalla-detalle-solicitud" class="enlace-detalle" data-pantalla="pantalla-detalle-solicitud" aria-label="Abrir detalle del ticket ST-0001">Abrir detalle</a></td>
+                </tr>
+                <tr>
+                  <td>ST-0002</td>
+                  <td>2026-10-06</td>
+                  <td>Celular Samsung Galaxy A12</td>
+                  <td>María Prueba</td>
+                  <td>Media</td>
+                  <td>En reparación</td>
+                  <td>Técnico Dos</td>
+                  <td><a href="#pantalla-detalle-solicitud" class="enlace-detalle" data-pantalla="pantalla-detalle-solicitud" aria-label="Abrir detalle del ticket ST-0002">Abrir detalle</a></td>
+                </tr>
+                <tr>
+                  <td>ST-0003</td>
+                  <td>2026-10-08</td>
+                  <td>Impresora Epson L3150</td>
+                  <td>Luis Demostración</td>
+                  <td>Baja</td>
+                  <td>Listo para entregar</td>
+                  <td>Técnico Uno</td>
+                  <td><a href="#pantalla-detalle-solicitud" class="enlace-detalle" data-pantalla="pantalla-detalle-solicitud" aria-label="Abrir detalle del ticket ST-0003">Abrir detalle</a></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Mensaje reservado: sin resultados (se mostrará con JavaScript) -->
+          <p id="mensaje-sin-resultados" class="mensaje mensaje-sin-resultados" role="status">
+            No se encontraron solicitudes que coincidan con la búsqueda.
+          </p>
+        </section>
+
+
+        <!-- =================================================
+             PANTALLA 4. REGISTRAR EQUIPO
+             ================================================= -->
+        <section id="pantalla-registrar-equipo" class="pantalla pantalla-registrar-equipo" aria-labelledby="registrar-titulo">
+          <h1 id="registrar-titulo">Registrar equipo</h1>
+          <p class="pantalla-descripcion">Completa los datos del cliente y del equipo que ingresa a servicio técnico.</p>
+          <p class="nota-obligatorios">Los campos marcados con <span aria-hidden="true">*</span><span class="solo-lectores">asterisco</span> son obligatorios.</p>
+
+          <form id="form-registrar-equipo" class="formulario" action="#" method="post">
+
+            <!-- Grupo: datos del cliente -->
+            <fieldset class="grupo-campos grupo-cliente">
+              <legend>Datos del cliente</legend>
+
+              <div class="campo">
+                <label for="cliente-nombre">Nombre del cliente <span aria-hidden="true">*</span></label>
+                <input type="text" id="cliente-nombre" name="cliente_nombre" placeholder="Ej.: Carlos Ejemplo" required>
+              </div>
+
+              <div class="campo">
+                <label for="cliente-telefono">Teléfono de contacto <span aria-hidden="true">*</span></label>
+                <input type="tel" id="cliente-telefono" name="cliente_telefono" placeholder="Ej.: 3000000000" required>
+              </div>
+            </fieldset>
+
+            <!-- Grupo: información del equipo -->
+            <fieldset class="grupo-campos grupo-equipo">
+              <legend>Información del equipo</legend>
+
+              <div class="campo">
+                <label for="equipo-tipo">Tipo de equipo <span aria-hidden="true">*</span></label>
+                <select id="equipo-tipo" name="equipo_tipo" required>
+                  <option value="">Selecciona una opción</option>
+                  <option value="computador">Computador</option>
+                  <option value="celular">Celular</option>
+                  <option value="impresora">Impresora</option>
+                  <option value="otro">Otro</option>
+                </select>
+              </div>
+
+              <div class="campo">
+                <label for="equipo-marca">Marca <span aria-hidden="true">*</span></label>
+                <input type="text" id="equipo-marca" name="equipo_marca" placeholder="Ej.: HP" required>
+              </div>
+
+              <div class="campo">
+                <label for="equipo-modelo">Modelo <span aria-hidden="true">*</span></label>
+                <input type="text" id="equipo-modelo" name="equipo_modelo" placeholder="Ej.: Pavilion 15" required>
+              </div>
+
+              <div class="campo">
+                <label for="equipo-serie">Número de serie (si corresponde)</label>
+                <input type="text" id="equipo-serie" name="equipo_serie" placeholder="Ej.: SN-000000">
+              </div>
+
+              <div class="campo">
+                <label for="equipo-falla">Descripción de la falla <span aria-hidden="true">*</span></label>
+                <textarea id="equipo-falla" name="equipo_falla" rows="4" placeholder="Describe el problema que presenta el equipo" required></textarea>
+              </div>
+
+              <div class="campo">
+                <label for="equipo-observaciones">Observaciones de ingreso</label>
+                <textarea id="equipo-observaciones" name="equipo_observaciones" rows="3" placeholder="Estado físico, accesorios entregados, etc."></textarea>
+              </div>
+            </fieldset>
+
+            <!-- Espacio reservado para mensajes de validación y confirmación -->
+            <div id="mensajes-formulario" class="mensajes-formulario" role="alert" aria-live="polite"></div>
+
+            <div class="acciones-formulario">
+              <button type="submit" id="btn-registrar" class="boton boton-primario">Registrar equipo</button>
+              <button type="reset" id="btn-limpiar" class="boton boton-secundario">Limpiar formulario</button>
+            </div>
+          </form>
+        </section>
+
+
+        <!-- =================================================
+             VISTA COMPLEMENTARIA. CONFIRMACIÓN DEL REGISTRO
+             (Complementa el recorrido de registro; no es una sexta pantalla principal)
+             ================================================= -->
+        <section id="vista-confirmacion-registro" class="pantalla vista-complementaria vista-confirmacion" aria-labelledby="confirmacion-titulo">
+          <h1 id="confirmacion-titulo">Registro completado</h1>
+          <p class="mensaje mensaje-exito" role="status">El equipo fue registrado correctamente en el prototipo.</p>
+
+          <dl class="datos-confirmacion">
+            <dt>Número de ticket generado</dt>
+            <dd id="confirmacion-ticket">ST-0004</dd>
+
+            <dt>Equipo registrado</dt>
+            <dd id="confirmacion-equipo">Portátil Lenovo IdeaPad (ejemplo)</dd>
+          </dl>
+
+          <nav class="acciones-confirmacion" aria-label="Opciones después del registro">
+            <a href="#pantalla-panel-principal" class="boton boton-secundario" data-pantalla="pantalla-panel-principal">Volver al Panel principal</a>
+            <a href="#pantalla-solicitudes" class="boton boton-primario" data-pantalla="pantalla-solicitudes">Consultar solicitudes</a>
+          </nav>
+        </section>
+
+
+        <!-- =================================================
+             PANTALLA 5. DETALLE DE LA SOLICITUD
+             Se abre desde la tabla de solicitudes
+             ================================================= -->
+        <section id="pantalla-detalle-solicitud" class="pantalla pantalla-detalle-solicitud" aria-labelledby="detalle-titulo">
+          <h1 id="detalle-titulo">Detalle de la solicitud</h1>
+
+          <a href="#pantalla-solicitudes" class="enlace-regresar" data-pantalla="pantalla-solicitudes">&larr; Volver a Solicitudes de servicio</a>
+
+          <!-- Datos generales -->
+          <section class="detalle-seccion detalle-general" aria-labelledby="detalle-general-titulo">
+            <h2 id="detalle-general-titulo">Datos generales</h2>
+            <dl class="detalle-datos">
+              <dt>Número de ticket</dt>
+              <dd id="detalle-ticket">ST-0001</dd>
+              <dt>Fecha de ingreso</dt>
+              <dd id="detalle-fecha">2026-10-05</dd>
+              <dt>Prioridad</dt>
+              <dd id="detalle-prioridad">Alta</dd>
+              <dt>Técnico asignado</dt>
+              <dd id="detalle-tecnico">Técnico Uno</dd>
+              <dt>Estado actual</dt>
+              <dd id="detalle-estado">En diagnóstico</dd>
+            </dl>
+          </section>
+
+          <!-- Cliente -->
+          <section class="detalle-seccion detalle-cliente" aria-labelledby="detalle-cliente-titulo">
+            <h2 id="detalle-cliente-titulo">Datos del cliente</h2>
+            <dl class="detalle-datos">
+              <dt>Nombre</dt>
+              <dd id="detalle-cliente-nombre">Carlos Ejemplo</dd>
+              <dt>Teléfono de contacto</dt>
+              <dd id="detalle-cliente-telefono">3000000000</dd>
+            </dl>
+          </section>
+
+          <!-- Equipo -->
+          <section class="detalle-seccion detalle-equipo" aria-labelledby="detalle-equipo-titulo">
+            <h2 id="detalle-equipo-titulo">Información del equipo</h2>
+            <dl class="detalle-datos">
+              <dt>Tipo de equipo</dt>
+              <dd id="detalle-equipo-tipo">Computador</dd>
+              <dt>Marca</dt>
+              <dd id="detalle-equipo-marca">HP</dd>
+              <dt>Modelo</dt>
+              <dd id="detalle-equipo-modelo">Pavilion 15</dd>
+              <dt>Número de serie</dt>
+              <dd id="detalle-equipo-serie">SN-000000</dd>
+            </dl>
+          </section>
+
+          <!-- Falla, observaciones y diagnóstico -->
+          <section class="detalle-seccion detalle-diagnostico" aria-labelledby="detalle-diagnostico-titulo">
+            <h2 id="detalle-diagnostico-titulo">Falla y diagnóstico</h2>
+            <dl class="detalle-datos">
+              <dt>Descripción del daño</dt>
+              <dd id="detalle-falla">El equipo no enciende al presionar el botón de encendido.</dd>
+              <dt>Observaciones de ingreso</dt>
+              <dd id="detalle-observaciones">Ingresa con cargador. Carcasa con rayones leves.</dd>
+              <dt>Diagnóstico</dt>
+              <dd id="detalle-diagnostico">Pendiente de revisión de la fuente de poder.</dd>
+            </dl>
+          </section>
+
+          <!-- Historial de estados -->
+          <section class="detalle-seccion detalle-historial" aria-labelledby="detalle-historial-titulo">
+            <h2 id="detalle-historial-titulo">Historial de estados</h2>
+            <ol id="lista-historial" class="historial-lista">
+              <li><time datetime="2026-10-05">2026-10-05</time> — Abierta</li>
+              <li><time datetime="2026-10-06">2026-10-06</time> — En diagnóstico</li>
+            </ol>
+          </section>
+        </section>
+
+      </main>
+    </div>
+
+    <!-- D. PIE DE PÁGINA -->
+    <footer id="pie-pagina" class="pie-pagina">
+      <p>Sistema de Gestión de Servicios Técnicos — Análisis y Desarrollo de Software, SENA.</p>
+      <p>Prototipo académico: los datos mostrados son ficticios.</p>
+    </footer>
+
+  </div>
+
+</body>
+</html>
