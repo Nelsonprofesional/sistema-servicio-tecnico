@@ -41,6 +41,12 @@
   box-sizing: border-box;
 }
 
+/* Evita que el celular agrande el texto por su cuenta al girar la pantalla */
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
@@ -52,6 +58,11 @@ body {
 
 h1, h2 {
   line-height: 1.25;
+}
+
+/* Evita que el atributo [hidden] sea anulado por otras reglas de display */
+[hidden] {
+  display: none !important;
 }
 
 /* Texto solo para lectores de pantalla (se oculta visualmente) */
@@ -194,6 +205,8 @@ textarea:focus-visible {
   color: var(--color-rojo);
 }
 
+/* Importante: el texto de los campos se mantiene en 1rem (16px) en todas las
+   pantallas; si fuera menor, el iPhone amplía la página al tocar un campo. */
 .campo input,
 .campo select,
 .campo textarea {
@@ -239,7 +252,7 @@ textarea:focus-visible {
 
 
 /* =====================================================
-   6. PANTALLA 1: INICIO DE SESIÓN
+   6. PANTALLA 1: INICIO DE SESIÓN Y CRÉDITOS
    Independiente de las pantallas internas
    ===================================================== */
 .pantalla-login {
@@ -248,6 +261,7 @@ textarea:focus-visible {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
+  min-height: 100dvh; /* en celulares descuenta la barra del navegador; si no existe, se usa 100vh */
   padding: 1.5rem;
 
   background:
@@ -292,6 +306,36 @@ textarea:focus-visible {
   color: var(--color-texto-secundario);
 }
 
+/* ----- Créditos del autor (esquina inferior derecha en escritorio) -----
+   En pantallas pequeñas pasan a ocupar su propio espacio debajo del
+   formulario (ver sección 14.2) para no taparlo nunca. */
+.creditos-proyecto {
+  position: absolute;
+  right: 1.5rem;
+  bottom: 1.25rem;
+  z-index: 2;
+  max-width: calc(100% - 3rem);
+  color: #FFFFFF;
+  font-size: 0.82rem;
+  line-height: 1.6;
+  text-align: right;
+  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
+}
+
+.creditos-proyecto p {
+  margin: 0.1rem 0;
+}
+
+.creditos-proyecto .creditos-autor {
+  font-size: 1rem;
+  font-weight: bold;
+}
+
+.creditos-proyecto .creditos-etiqueta {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
 
 /* =====================================================
    7. ESTRUCTURA INTERNA: ENCABEZADO, MENÚ, CONTENIDO, PIE
@@ -300,6 +344,7 @@ textarea:focus-visible {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  min-height: 100dvh;
 }
 
 /* ----- Encabezado superior ----- */
@@ -387,10 +432,16 @@ textarea:focus-visible {
   background-color: rgba(255, 255, 255, 0.2);
 }
 
+/* Opción activa del menú (el atributo aria-current lo pone app.js) */
+.menu-enlace[aria-current="page"] {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
 /* ----- Área principal ----- */
 .contenido-principal {
   min-width: 0; /* evita que tablas anchas desborden la cuadrícula */
   padding: 1.5rem;
+  overflow-wrap: break-word; /* los textos largos se ajustan al ancho disponible */
 }
 
 /* Panel blanco solo para las pantallas internas (el login queda fuera) */
@@ -479,7 +530,8 @@ textarea:focus-visible {
    9. TABLAS
    ===================================================== */
 .tabla-contenedor {
-  overflow-x: auto;
+  max-width: 100%;
+  overflow-x: auto; /* el desplazamiento horizontal queda dentro de la tabla */
   border: 1px solid var(--color-borde);
   border-radius: var(--radio);
 }
@@ -539,7 +591,7 @@ textarea:focus-visible {
 }
 
 /* Mensaje de "sin resultados": oculto hasta que una búsqueda no encuentre
-   solicitudes. Más adelante JavaScript le agregará la clase "visible". */
+   solicitudes. app.js le agrega la clase "visible" cuando hace falta. */
 .mensaje-sin-resultados {
   display: none;
   margin: 1rem 0 0;
@@ -715,33 +767,95 @@ textarea:focus-visible {
 
 /* =====================================================
    14. DISEÑO ADAPTABLE (MEDIA QUERIES)
+   De mayor a menor ancho: cada bloque solo cambia lo
+   necesario y el escritorio (más de 1100px) no se toca.
    ===================================================== */
 
-/* Pantallas intermedias: 2 tarjetas por fila */
+/* ---------- 14.1 Pantallas intermedias (hasta 1100px): 2 tarjetas por fila ---------- */
 @media (max-width: 1100px) {
   .tarjetas-resumen {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
-/* Tabletas y celulares: el menú pasa arriba, en horizontal */
+/* ---------- 14.2 Inicio de sesión en tabletas, celulares y ventanas bajas ----------
+   Los créditos dejan de flotar sobre el fondo y pasan a ocupar su propio espacio
+   al final, alineados a la derecha. Así nunca tapan el formulario. */
+@media (max-width: 900px), (max-height: 640px) {
+  .pantalla-login {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  /* margin: auto centra la tarjeta en el espacio libre */
+  .login-contenedor {
+    margin: auto;
+  }
+
+  .creditos-proyecto {
+    position: static;
+    align-self: flex-end;
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+}
+
+/* ---------- 14.3 Tabletas y celulares (hasta 800px) ----------
+   El menú pasa arriba, en UNA sola fila que se desplaza con el dedo. */
 @media (max-width: 800px) {
+  /* minmax(0, 1fr): la columna nunca se ensancha por el contenido del menú */
   .cuerpo-aplicacion {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .menu-lateral {
-    padding: 0.5rem 1rem;
+    min-width: 0;
+    padding: 0.3rem 0.5rem;
   }
 
   .menu-lista {
     flex-direction: row;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
+    gap: 0.25rem;
+    padding: 2px;
+    overflow-x: auto; /* el desplazamiento queda dentro del propio menú */
+    overscroll-behavior-x: contain;
+    scrollbar-width: none;
+  }
+
+  .menu-lista::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Los tres <li> se reparten el ancho en partes iguales y el texto puede
+     pasar a una segunda línea, así las tres opciones se ven completas en una
+     sola fila. Solo si ni siquiera así caben (pantallas menores de 320px),
+     el menú se desplaza horizontalmente dentro de sí mismo. */
+  .menu-lista li {
+    flex: 1 1 0;
+    min-width: min-content;
   }
 
   .menu-enlace {
-    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 48px;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.92rem;
+    line-height: 1.2;
     text-align: center;
+    white-space: normal;
+  }
+
+  /* La sección activa se distingue por el fondo y por una línea inferior */
+  .menu-enlace[aria-current="page"] {
+    box-shadow: inset 0 -3px 0 var(--color-blanco);
+  }
+
+  /* Dentro del menú desplazable el foco se dibuja hacia adentro para que no se recorte */
+  .menu-lateral :focus-visible {
+    outline-offset: -3px;
   }
 
   .contenido-principal {
@@ -753,116 +867,575 @@ textarea:focus-visible {
   }
 }
 
-/* Formularios en una columna */
+/* ---------- 14.4 Formularios y datos en una columna (hasta 700px) ---------- */
 @media (max-width: 700px) {
+  /* minmax(0, 1fr): la columna nunca se ensancha por el contenido de un campo */
   .filtros,
   .grupo-campos {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .detalle-datos,
+  /* Etiqueta y valor en la misma línea (más compacto que apilarlos) */
+  .detalle-datos {
+    grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
+    gap: 0.45rem 0.75rem;
+  }
+
+  .detalle-datos dt {
+    font-size: 0.8rem;
+  }
+
+  .detalle-datos dd {
+    overflow-wrap: anywhere; /* números de serie o textos largos no se salen del bloque */
+  }
+
   .datos-confirmacion {
     grid-template-columns: 1fr;
-    gap: 0.25rem;
-  }
-
-  .detalle-datos dd,
-  .datos-confirmacion dd {
-    margin-bottom: 0.75rem;
-  }
-}
-
-/* Celulares: una tarjeta por fila y encabezado compacto */
-@media (max-width: 600px) {
-  .tarjetas-resumen {
-    grid-template-columns: 1fr;
-  }
-
-  .encabezado-superior {
+    gap: 0.15rem;
     padding: 0.75rem 1rem;
   }
 
+  .datos-confirmacion dd {
+    margin-bottom: 0.5rem;
+  }
+
+  .datos-confirmacion dd:last-child {
+    margin-bottom: 0;
+  }
+}
+
+/* ---------- 14.5 Celulares (hasta 600px): interfaz compacta y tablas en tarjetas ---------- */
+@media (max-width: 600px) {
+
+  /* ----- Encabezado en una cuadrícula compacta -----
+     [logo] [título        ] [Cerrar sesión]
+     [logo] [nombre usuario] [Cerrar sesión]
+     (.encabezado-usuario usa display: contents para que su nombre y su
+      botón se ubiquen directamente en la cuadrícula del encabezado) */
+  .encabezado-superior {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    grid-template-areas:
+      "logo    titulo  boton"
+      "logo    usuario boton";
+    align-items: center;
+    gap: 0 0.6rem;
+    padding: 0.45rem 0.75rem;
+  }
+
+  .logo-espacio {
+    grid-area: logo;
+    width: 36px;
+    height: 36px;
+    border-width: 1px;
+    font-size: 0.6rem;
+  }
+
   .encabezado-titulo {
-    flex-basis: calc(100% - 64px);
-    font-size: 1rem;
+    grid-area: titulo;
+    font-size: 0.85rem;
+    line-height: 1.2;
+    overflow-wrap: break-word; /* el título puede dividirse en varias líneas */
   }
 
   .encabezado-usuario {
-    justify-content: space-between;
-    width: 100%;
-    margin-left: 0;
+    display: contents;
   }
 
-  .login-contenedor {
-    padding: 1.5rem;
+  .usuario-nombre {
+    grid-area: usuario;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 0.75rem;
+    font-weight: normal;
+    color: rgba(255, 255, 255, 0.88);
+  }
+
+  .encabezado-usuario .boton {
+    grid-area: boton;
+    min-height: 40px;
+    padding: 0.3rem 0.65rem;
+    font-size: 0.8rem;
+  }
+
+  /* ----- Menú: texto y relleno compactos para que las 3 opciones quepan ----- */
+  .menu-enlace {
+    padding: 0.35rem 0.3rem;
+    font-size: 0.82rem;
+    line-height: 1.15;
+  }
+
+  /* ----- Contenido: márgenes, rellenos y títulos más pequeños ----- */
+  .contenido-principal {
+    padding: 0.6rem;
+  }
+
+  .contenido-principal .pantalla {
+    margin-bottom: 0.75rem;
+    padding: 0.9rem;
+  }
+
+  .contenido-principal h1 {
+    margin-bottom: 0.35rem;
+    font-size: 1.3rem;
+  }
+
+  .pantalla-descripcion {
+    margin-bottom: 0.85rem;
+    font-size: 0.9rem;
+  }
+
+  /* ----- Botones y enlaces (siguen siendo cómodos para el dedo) ----- */
+  .boton {
+    min-height: 44px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.95rem;
+  }
+
+  .accesos-rapidos {
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .acciones-formulario,
+  .acciones-confirmacion {
+    gap: 0.5rem;
   }
 
   .acciones-formulario .boton,
   .acciones-confirmacion .boton,
-  .accesos-rapidos .boton {
+  .accesos-rapidos .boton,
+  .pantalla-solicitudes > .boton {
     width: 100%;
+  }
+
+  .pantalla-solicitudes > .boton {
+    margin-bottom: 0.75rem;
+  }
+
+  /* ----- Panel principal: tarjetas 2 por fila y más bajas ----- */
+  .tarjetas-resumen {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.6rem;
+    margin-bottom: 1rem;
+  }
+
+  .tarjeta {
+    padding: 0.7rem 0.8rem;
+    border-top-width: 4px;
+  }
+
+  .tarjeta-titulo {
+    margin-bottom: 0.3rem;
+    font-size: 0.78rem;
+  }
+
+  .tarjeta-valor {
+    font-size: 1.6rem;
+  }
+
+  .solicitudes-recientes h2 {
+    margin-bottom: 0.5rem;
+    font-size: 1.05rem;
+  }
+
+  /* ----- Tablas convertidas en TARJETAS (#tabla-solicitudes y #tabla-solicitudes-recientes) -----
+     Cada <tr> pasa a ser una tarjeta con cuadrícula de 2 columnas. Las etiquetas
+     («Fecha de ingreso», «Cliente»...) se escriben con ::before, así que también
+     funcionan con las filas que crea app.js. Se usa grid-column/grid-row para
+     colocar cada celda; el orden del HTML no cambia.
+     Orden de las celdas en #tabla-solicitudes:
+       1 ticket · 2 fecha · 3 equipo · 4 cliente · 5 prioridad · 6 estado · 7 técnico · 8 acción
+     Orden de las celdas en #tabla-solicitudes-recientes:
+       1 ticket · 2 equipo · 3 cliente · 4 estado · 5 acción */
+
+  /* Sin desplazamiento horizontal: ya no hay una tabla ancha que contener */
+  .tabla-contenedor {
+    overflow: visible;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .tabla {
+    display: block;
+    width: 100%;
+    min-width: 0;
+    font-size: 0.92rem;
+  }
+
+  #tabla-solicitudes {
+    min-width: 0; /* anula los 920px de escritorio */
+  }
+
+  /* Los encabezados de columna siguen existiendo para los lectores de pantalla,
+     pero se ocultan visualmente (cada tarjeta ya trae sus propias etiquetas) */
+  .tabla thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* El <tbody> es una lista vertical; "gap" separa las tarjetas y, como las
+     filas ocultas (hidden) no cuentan, el filtro no deja espacios vacíos */
+  .tabla tbody {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.7rem;
+  }
+
+  /* Colores del estado (los pone el atributo data-estado de cada fila).
+     Si una fila no lo tiene, se usa el azul neutro por defecto. */
+  .tabla tbody tr {
+    --estado-fondo: var(--color-azul-claro);
+    --estado-texto: #1B4A80;
+    --estado-acento: var(--color-azul-medio);
+  }
+
+  .tabla tbody tr[data-estado="abierta"] {
+    --estado-fondo: #DCE8F5;
+    --estado-texto: #1B4A80;
+    --estado-acento: var(--color-azul-medio);
+  }
+
+  .tabla tbody tr[data-estado="diagnostico"] {
+    --estado-fondo: #FFF1C2;
+    --estado-texto: #6B4E00;
+    --estado-acento: var(--color-amarillo);
+  }
+
+  .tabla tbody tr[data-estado="reparacion"] {
+    --estado-fondo: #FDE3CC;
+    --estado-texto: #8A4204;
+    --estado-acento: var(--color-naranja);
+  }
+
+  .tabla tbody tr[data-estado="listo"] {
+    --estado-fondo: #DDF1E5;
+    --estado-texto: #1E5A37;
+    --estado-acento: var(--color-verde);
+  }
+
+  /* La tarjeta. Importante: el atributo [hidden] (sección 2) usa !important,
+     por eso una tarjeta filtrada se oculta aunque aquí tenga display: grid. */
+  .tabla tbody tr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 0.6rem 0.75rem;
+    min-width: 0;
+    padding: 0.8rem 0.85rem;
+    border: 1px solid var(--color-borde);
+    border-left: 4px solid var(--estado-acento);
+    border-radius: var(--radio);
+    box-shadow: var(--sombra);
+  }
+
+  /* Columnas de cada tarjeta. Ticket (izquierda) e insignia de estado (derecha)
+     tienen SU PROPIA columna, así nunca se montan una sobre otra.
+     - Solicitudes: columna izquierda más angosta (ticket, fecha, prioridad)
+       y derecha más ancha (insignia, cliente, técnico).
+     - Recientes: la insignia toma el ancho que necesite y el ticket el resto. */
+  #tabla-solicitudes tbody tr {
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  #tabla-solicitudes-recientes tbody tr {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  /* Anula el rayado de filas pares y el color al pasar el mouse del escritorio */
+  .tabla tbody tr,
+  .tabla tbody tr:nth-child(even),
+  .tabla tbody tr:hover {
+    background-color: var(--color-blanco);
+  }
+
+  /* Cada celda es un bloque; por defecto ocupa todo el ancho de la tarjeta */
+  .tabla td {
+    display: block;
+    grid-column: 1 / -1;
+    position: relative;
+    min-width: 0;
+    padding: 0;
+    border: 0;
+    color: var(--color-texto);
+    font-size: 0.92rem;
+    line-height: 1.35;
+    overflow-wrap: anywhere; /* textos largos y números de serie no desbordan */
+  }
+
+  /* Etiqueta pequeña encima de cada dato (el texto va en las reglas de abajo) */
+  .tabla td::before {
+    display: block;
+    margin-bottom: 0.1rem;
+    color: var(--color-texto-secundario);
+    font-size: 0.72rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  #tabla-solicitudes td:nth-child(1)::before,
+  #tabla-solicitudes-recientes td:nth-child(1)::before {
+    content: "Número de ticket";
+  }
+
+  #tabla-solicitudes td:nth-child(2)::before {
+    content: "Fecha de ingreso";
+  }
+
+  #tabla-solicitudes td:nth-child(3)::before,
+  #tabla-solicitudes-recientes td:nth-child(2)::before {
+    content: "Equipo";
+  }
+
+  #tabla-solicitudes td:nth-child(4)::before,
+  #tabla-solicitudes-recientes td:nth-child(3)::before {
+    content: "Cliente";
+  }
+
+  #tabla-solicitudes td:nth-child(5)::before {
+    content: "Prioridad";
+  }
+
+  #tabla-solicitudes td:nth-child(6)::before,
+  #tabla-solicitudes-recientes td:nth-child(4)::before {
+    content: "Estado";
+  }
+
+  #tabla-solicitudes td:nth-child(7)::before {
+    content: "Técnico asignado";
+  }
+
+  /* El ticket y el estado ya se entienden por su aspecto (número grande e
+     insignia): su etiqueta queda oculta a la vista pero la leen los lectores */
+  #tabla-solicitudes td:nth-child(1)::before,
+  #tabla-solicitudes td:nth-child(6)::before,
+  #tabla-solicitudes-recientes td:nth-child(1)::before,
+  #tabla-solicitudes-recientes td:nth-child(4)::before {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+  }
+
+  /* Número de ticket: destacado, arriba a la izquierda */
+  .tabla td:first-child {
+    align-self: center;
+    color: var(--color-azul-oscuro);
+    font-size: 1.1rem;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  /* Equipo y prioridad: se leen primero */
+  #tabla-solicitudes td:nth-child(3),
+  #tabla-solicitudes-recientes td:nth-child(2) {
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  #tabla-solicitudes td:nth-child(5) {
+    font-weight: bold;
+  }
+
+  /* Insignia de estado: arriba a la derecha, con el color de la fila.
+     Si el texto es largo, la insignia puede pasar a dos líneas sin desbordar. */
+  #tabla-solicitudes td:nth-child(6),
+  #tabla-solicitudes-recientes td:nth-child(4) {
+    justify-self: end;
+    align-self: center;
+    max-width: 100%;
+    padding: 0.2rem 0.65rem;
+    border-radius: 999px;
+    background-color: var(--estado-fondo);
+    color: var(--estado-texto);
+    font-size: 0.75rem;
+    font-weight: bold;
+    line-height: 1.25;
+    text-align: center;
+  }
+
+  /* ----- Posición de cada dato: #tabla-solicitudes (2 columnas) ----- */
+  #tabla-solicitudes td:nth-child(1) { grid-column: 1;      grid-row: 1; } /* ticket */
+  #tabla-solicitudes td:nth-child(6) { grid-column: 2;      grid-row: 1; } /* estado */
+  #tabla-solicitudes td:nth-child(3) { grid-column: 1 / -1; grid-row: 2; } /* equipo */
+  #tabla-solicitudes td:nth-child(2) { grid-column: 1;      grid-row: 3; } /* fecha */
+  #tabla-solicitudes td:nth-child(4) { grid-column: 2;      grid-row: 3; } /* cliente */
+  #tabla-solicitudes td:nth-child(5) { grid-column: 1;      grid-row: 4; } /* prioridad */
+  #tabla-solicitudes td:nth-child(7) { grid-column: 2;      grid-row: 4; } /* técnico */
+  #tabla-solicitudes td:nth-child(8) { grid-column: 1 / -1; grid-row: 5; } /* ver detalle */
+
+  /* ----- Posición de cada dato: #tabla-solicitudes-recientes (ticket | estado, el resto a todo el ancho) ----- */
+  #tabla-solicitudes-recientes td:nth-child(1) { grid-column: 1; grid-row: 1; } /* ticket */
+  #tabla-solicitudes-recientes td:nth-child(4) { grid-column: 2; grid-row: 1; } /* estado */
+  #tabla-solicitudes-recientes td:nth-child(2) { grid-row: 2; } /* equipo */
+  #tabla-solicitudes-recientes td:nth-child(3) { grid-row: 3; } /* cliente */
+  #tabla-solicitudes-recientes td:nth-child(5) { grid-row: 4; } /* ver detalle */
+
+  /* ----- Botón "Ver detalle" / "Abrir detalle": ancho completo, fácil de tocar ----- */
+  .tabla td:last-child {
+    margin-top: 0.1rem;
+  }
+
+  .tabla .enlace-detalle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 44px;
+    padding: 0.5rem 0.9rem;
+    background-color: var(--color-azul-medio);
+    border-color: var(--color-azul-medio);
+    color: var(--color-blanco);
+    font-size: 0.95rem;
+    text-align: center;
+  }
+
+  .tabla .enlace-detalle:hover {
+    background-color: var(--color-azul-oscuro);
+    border-color: var(--color-azul-oscuro);
+  }
+
+  /* ----- Solicitudes y formulario de registro ----- */
+  .filtros {
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .nota-obligatorios {
+    margin-bottom: 0.75rem;
+    font-size: 0.85rem;
+  }
+
+  .pantalla-registrar-equipo .formulario {
+    gap: 0.85rem;
+  }
+
+  .grupo-campos {
+    gap: 0.7rem;
+    padding: 0.75rem;
+  }
+
+  .mensajes-formulario {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* ----- Confirmación ----- */
+  .datos-confirmacion {
+    margin: 1rem 0;
+  }
+
+  #confirmacion-ticket {
+    font-size: 1.2rem;
+  }
+
+  /* ----- Detalle de la solicitud: bloques compactos ----- */
+  .enlace-regresar {
+    display: inline-flex;
+    align-items: center;
+    min-height: 40px;
+    margin: 0.15rem 0 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .detalle-seccion {
+    margin-bottom: 0.6rem;
+    padding: 0.65rem 0.8rem;
+    border-left-width: 4px;
+  }
+
+  .detalle-seccion h2 {
+    margin-bottom: 0.45rem;
+    font-size: 1rem;
+  }
+
+  /* Falla, observaciones y diagnóstico tienen textos largos:
+     etiqueta arriba y valor debajo, a todo el ancho */
+  .detalle-diagnostico .detalle-datos {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+  }
+
+  .detalle-diagnostico .detalle-datos dd {
+    margin-bottom: 0.45rem;
+  }
+
+  .detalle-diagnostico .detalle-datos dd:last-child {
+    margin-bottom: 0;
+  }
+
+  .historial-lista li {
+    padding: 0.3rem 0 0.3rem 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  /* ----- Inicio de sesión y créditos ----- */
+  .pantalla-login {
+    padding: 0.75rem;
+  }
+
+  .login-contenedor {
+    padding: 1.25rem;
+  }
+
+  .login-titulo {
+    margin-bottom: 1rem;
+    font-size: 1.25rem;
+  }
+
+  .form-login {
+    gap: 0.75rem;
+  }
+
+  .login-aviso {
+    margin-top: 1rem;
+    font-size: 0.8rem;
+  }
+
+  .creditos-proyecto {
+    font-size: 0.72rem;
+  }
+
+  .creditos-proyecto .creditos-autor {
+    font-size: 0.85rem;
+  }
+
+  /* ----- Pie de página ----- */
+  .pie-pagina {
+    padding: 0.6rem 0.75rem;
+    font-size: 0.75rem;
   }
 }
 
-/* Respeta a quienes prefieren menos animaciones */
+/* ---------- 14.6 Celulares muy angostos (hasta 340px): 1 tarjeta por fila ---------- */
+@media (max-width: 340px) {
+  .tarjetas-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  /* Tarjetas de #tabla-solicitudes: el cliente y el técnico ocupan todo el
+     ancho para que sus nombres no se corten; fecha y prioridad comparten fila */
+  #tabla-solicitudes td:nth-child(4) { grid-column: 1 / -1; grid-row: 3; } /* cliente */
+  #tabla-solicitudes td:nth-child(2) { grid-column: 1;      grid-row: 4; } /* fecha */
+  #tabla-solicitudes td:nth-child(5) { grid-column: 2;      grid-row: 4; } /* prioridad */
+  #tabla-solicitudes td:nth-child(7) { grid-column: 1 / -1; grid-row: 5; } /* técnico */
+  #tabla-solicitudes td:nth-child(8) { grid-column: 1 / -1; grid-row: 6; } /* ver detalle */
+}
+
+/* ---------- 14.7 Respeta a quienes prefieren menos animaciones ---------- */
 @media (prefers-reduced-motion: reduce) {
   * {
     transition: none !important;
-  }
-}
-/* Opción activa del menú lateral */
-.menu-enlace[aria-current="page"] {
-  background-color: rgba(255, 255, 255, 0.25);
-}
-
-/* Evita que [hidden] sea anulado por otras reglas de display */
-[hidden] {
-  display: none !important;
-}
-/* Creditos del autor del prototipo */
-.creditos-proyecto {
-  position: absolute;
-  right: 1.5rem;
-  bottom: 1.25rem;
-  left: auto;
-  z-index: 2;
-  max-width: calc(100% - 3rem);
-  color: #FFFFFF;
-  font-size: 0.82rem;
-  line-height: 1.6;
-  text-align: right;
-  text-shadow: 0 1px 5px rgba(0, 0, 0, 0.75);
-}
-
-.creditos-proyecto p {
-  margin: 0.1rem 0;
-}
-
-.creditos-proyecto .creditos-autor {
-  font-size: 1rem;
-  font-weight: bold;
-}
-
-.creditos-proyecto .creditos-etiqueta {
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-/* Adaptación para celulares */
-@media (max-width: 600px) {
-  .pantalla-login {
-    padding: 1rem 1rem 8rem;
-  }
-
-    .creditos-proyecto {
-    right: 1rem;
-    left: auto;
-    bottom: 1rem;
-    max-width: calc(100% - 2rem);
-    text-align: right;
-    font-size: 0.72rem;
-  }
-    .creditos-proyecto .creditos-autor {
-    font-size: 0.85rem;
   }
 }

@@ -310,6 +310,7 @@ function crearEnlaceDetalle(solicitud, textoEnlace) {
 /** Fila de la tabla "Solicitudes recientes" (5 columnas). */
 function crearFilaReciente(solicitud) {
   const fila = document.createElement('tr');
+  fila.dataset.estado = solicitud.estado; // permite que el CSS coloree la insignia de estado
   fila.append(
     crearCelda(solicitud.ticket),
     crearCelda(solicitud.nombreEquipo),
