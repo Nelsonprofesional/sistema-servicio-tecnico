@@ -1,2 +1,2 @@
 # sistema-servicio-tecnico
-Prototipo académico SENA - Sistema de Gestión de Servicios Técnicos
+Prototipo académico  - Sistema de Gestión de Servicios Técnicos
