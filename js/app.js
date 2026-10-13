@@ -129,6 +129,8 @@ const campoClave = document.getElementById('login-clave');
 const interfazInterna = document.getElementById('interfaz-interna');
 const usuarioNombre = document.getElementById('usuario-nombre');
 const botonCerrarSesion = document.getElementById('btn-cerrar-sesion');
+const botonMenuUsuario = document.getElementById('btn-menu-usuario');
+const menuUsuario = document.getElementById('menu-usuario');
 
 const formFiltros = document.getElementById('form-filtros');
 const campoBusqueda = document.getElementById('buscar-solicitud');
@@ -263,6 +265,7 @@ function iniciarSesion(evento) {
 }
 
 function cerrarSesion() {
+  cerrarMenuUsuario(); // el menú de usuario (hamburguesa) queda cerrado para el próximo ingreso
   cambiarVisibilidad(interfazInterna, false);
   cambiarVisibilidad(pantallaLogin, true);
 
@@ -281,6 +284,61 @@ function cerrarSesion() {
   }
 
   campoUsuario.focus();
+}
+
+/* ----- Menú de usuario (hamburguesa, solo se ve en celulares) -----
+   El botón "Cerrar sesión" (#btn-cerrar-sesion) sigue siendo el mismo y sigue
+   llamando a cerrarSesion(); estas funciones solo abren y cierran el panel. */
+
+// Mismo punto de corte que el CSS (sección 14.5)
+const CONSULTA_CELULAR = '(max-width: 600px)';
+
+function menuUsuarioAbierto() {
+  return Boolean(menuUsuario && menuUsuario.classList.contains('abierto'));
+}
+
+function abrirMenuUsuario() {
+  if (!menuUsuario || !botonMenuUsuario) return;
+  menuUsuario.classList.add('abierto');
+  botonMenuUsuario.setAttribute('aria-expanded', 'true');
+  botonMenuUsuario.setAttribute('aria-label', 'Cerrar menú de usuario');
+}
+
+/** Cierra el panel. Con devolverFoco === true el foco vuelve a la hamburguesa (teclado). */
+function cerrarMenuUsuario(devolverFoco) {
+  if (!menuUsuarioAbierto()) return;
+  menuUsuario.classList.remove('abierto');
+  botonMenuUsuario.setAttribute('aria-expanded', 'false');
+  botonMenuUsuario.setAttribute('aria-label', 'Abrir menú de usuario');
+  if (devolverFoco === true) botonMenuUsuario.focus();
+}
+
+function alternarMenuUsuario() {
+  if (menuUsuarioAbierto()) {
+    cerrarMenuUsuario();
+  } else {
+    abrirMenuUsuario();
+  }
+}
+
+/** Tocar o hacer clic fuera del botón y del panel cierra el menú. */
+function cerrarMenuUsuarioAlTocarFuera(evento) {
+  if (!menuUsuarioAbierto()) return;
+  if (botonMenuUsuario.contains(evento.target) || menuUsuario.contains(evento.target)) return;
+  cerrarMenuUsuario();
+}
+
+/** La tecla Escape cierra el menú y devuelve el foco a la hamburguesa. */
+function cerrarMenuUsuarioConEscape(evento) {
+  if (evento.key === 'Escape' && menuUsuarioAbierto()) cerrarMenuUsuario(true);
+}
+
+/** Si el foco del teclado sale del botón y del panel, el menú se cierra. */
+function cerrarMenuUsuarioAlPerderFoco(evento) {
+  const destino = evento.relatedTarget;
+  if (!destino || !menuUsuarioAbierto()) return;
+  if (botonMenuUsuario.contains(destino) || menuUsuario.contains(destino)) return;
+  cerrarMenuUsuario();
 }
 
 
@@ -638,6 +696,19 @@ function iniciar() {
     });
   }
   if (botonCerrarSesion) botonCerrarSesion.addEventListener('click', cerrarSesion);
+
+  // Menú de usuario (hamburguesa en celulares)
+  if (botonMenuUsuario && menuUsuario) {
+    botonMenuUsuario.addEventListener('click', alternarMenuUsuario);
+    botonMenuUsuario.addEventListener('focusout', cerrarMenuUsuarioAlPerderFoco);
+    menuUsuario.addEventListener('focusout', cerrarMenuUsuarioAlPerderFoco);
+    document.addEventListener('click', cerrarMenuUsuarioAlTocarFuera);
+    document.addEventListener('keydown', cerrarMenuUsuarioConEscape);
+    // Al pasar de celular a escritorio (o al girar) el menú queda cerrado
+    window.matchMedia(CONSULTA_CELULAR).addEventListener('change', function () {
+      cerrarMenuUsuario();
+    });
+  }
 
   // Búsqueda y filtros
   if (campoBusqueda) campoBusqueda.addEventListener('input', aplicarFiltros);

@@ -5,19 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Sistema de Gestion de Servicios Tecnicos</title>
 
-  <!-- Hoja de estilos (se creara en la siguiente etapa) -->
+  <!-- ==========================================
+     ESTILOS DE LA PAGINA
+     Aqui se encuentra el diseno visual
+     ========================================== -->
   <link rel="stylesheet" href="css/styles.css">
 
-  <!-- JavaScript (se creara en la siguiente etapa); defer lo ejecuta al terminar de cargar el HTML -->
+   <!-- ==========================================
+       FUNCIONES DE LA PAGINA
+       Este archivo controla la navegacion y las acciones
+       ========================================== -->
   <script src="js/app.js" defer></script>
 </head>
 
 <body>
-
-  <!-- =====================================================
-       PANTALLA 1. INICIO DE SESION
-       Estructura independiente de la interfaz interna
-       ===================================================== -->
+<!-- ==========================================
+     INICIO DE SESION
+     Pantalla para acceder al sistema
+     ========================================== -->
   <section id="pantalla-inicio-sesion" class="pantalla pantalla-login" aria-labelledby="login-titulo">
     <div class="login-contenedor">
       <h1 id="login-titulo" class="login-titulo">Sistema de Gestión de Servicios Técnicos</h1>
@@ -42,7 +47,10 @@
     
     </div>
 
-    <!-- Créditos del autor del prototipo -->
+      <!-- ==========================================
+         CREDITOS DEL AUTOR
+         Informacion de quien creo el sistema
+         ========================================== -->
     <div class="creditos-proyecto" aria-label="Autoría del prototipo">
       <p>Creado por</p>
       <p class="creditos-autor">
@@ -56,13 +64,16 @@
   </section>
 
   </section>
-  <!-- =====================================================
-       INTERFAZ INTERNA DE LA APLICACIÓN
-       Estructura común para las pantallas 2, 3, 4 y 5
-       ===================================================== -->
+  <!-- ==========================================
+       PANTALLAS INTERNAS DEL SISTEMA
+       Aqui se muestran las opciones de trabajo
+       ========================================== -->
   <div id="interfaz-interna" class="interfaz-interna">
 
-    <!-- A. ENCABEZADO SUPERIOR -->
+     <!-- ==========================================
+       ENCABEZADO PRINCIPAL
+       Muestra el nombre del sistema y el usuario
+       ========================================== -->
     <header id="encabezado-superior" class="encabezado-superior">
       <div id="logo-espacio" class="logo-espacio" aria-label="Espacio reservado para el logotipo">
         Logo
@@ -72,13 +83,29 @@
 
       <div class="encabezado-usuario">
         <span id="usuario-nombre" class="usuario-nombre">Usuario Demo</span>
-        <button type="button" id="btn-cerrar-sesion" class="boton boton-secundario">Cerrar sesión</button>
+
+        <!-- Botón de hamburguesa: solo se ve en celulares (hasta 600px) -->
+        <button type="button" id="btn-menu-usuario" class="boton-hamburguesa"
+                aria-label="Abrir menú de usuario" aria-expanded="false" aria-controls="menu-usuario">
+          <span class="hamburguesa-linea" aria-hidden="true"></span>
+          <span class="hamburguesa-linea" aria-hidden="true"></span>
+          <span class="hamburguesa-linea" aria-hidden="true"></span>
+        </button>
+
+        <!-- Menú de usuario: en escritorio solo muestra el botón «Cerrar sesión» en el
+             encabezado; en celulares es un panel desplegable de la hamburguesa -->
+        <div id="menu-usuario" class="menu-usuario">
+          <button type="button" id="btn-cerrar-sesion" class="boton boton-secundario">Cerrar sesión</button>
+        </div>
       </div>
     </header>
 
     <div class="cuerpo-aplicacion">
 
-      <!-- B. MENÚ LATERAL -->
+            <!-- ==========================================
+           MENU DE NAVEGACION LATERAL IZQUIERDO
+           Permite cambiar entre las secciones del sistema
+           ========================================== -->
       <aside id="menu-lateral" class="menu-lateral">
         <nav aria-label="Menú principal">
           <ul class="menu-lista">
@@ -89,9 +116,10 @@
         </nav>
       </aside>
 
-      <!-- C. ÁREA PRINCIPAL DE CONTENIDO
-           Más adelante, JavaScript mostrará una sola pantalla a la vez.
-           Por ahora todas están en el HTML para poder estudiarlas. -->
+             <!-- ==========================================
+             AREA PRINCIPAL
+             Aqui se muestra la seccion seleccionada
+             ========================================== -->
       <main id="contenido-principal" class="contenido-principal">
 
 
@@ -102,7 +130,10 @@
           <h1 id="panel-titulo">Panel principal</h1>
           <p class="pantalla-descripcion">Resumen del estado de las solicitudes de servicio técnico y accesos rápidos.</p>
 
-          <!-- Tarjetas informativas -->
+                  <!-- ==========================================
+               TARJETAS DE RESUMEN
+               Muestran las solicitudes segun su estado
+               ========================================== -->
           <section class="tarjetas-resumen" aria-label="Resumen de solicitudes">
             <article class="tarjeta tarjeta-abiertas">
               <h2 class="tarjeta-titulo">Solicitudes abiertas</h2>
@@ -122,13 +153,19 @@
             </article>
           </section>
 
-          <!-- Accesos rápidos -->
+                    <!-- ==========================================
+               ACCESOS RAPIDOS
+               Enlaces para entrar a las opciones principales
+               ========================================== -->
           <nav class="accesos-rapidos" aria-label="Accesos rápidos">
             <a href="#pantalla-solicitudes" class="boton boton-secundario" data-pantalla="pantalla-solicitudes">Ir a Solicitudes de servicio</a>
             <a href="#pantalla-registrar-equipo" class="boton boton-primario" data-pantalla="pantalla-registrar-equipo">Ir a Registrar equipo</a>
           </nav>
 
-          <!-- Tabla de solicitudes recientes -->
+                    <!-- ==========================================
+               SOLICITUDES RECIENTES
+               Muestra los ultimos servicios registrados
+               ========================================== -->
           <section class="solicitudes-recientes" aria-labelledby="recientes-titulo">
             <h2 id="recientes-titulo">Solicitudes recientes</h2>
 
@@ -180,7 +217,10 @@
           <h1 id="solicitudes-titulo">Solicitudes de servicio</h1>
           <p class="pantalla-descripcion">Consulta las solicitudes registradas y abre el detalle de cada una.</p>
 
-          <!-- Búsqueda y filtro -->
+                <!-- ==========================================
+               BUSQUEDA Y FILTROS
+               Permite encontrar solicitudes por ticket o estado
+               ========================================== -->
           <form id="form-filtros" class="filtros" action="#" role="search" aria-label="Buscar y filtrar solicitudes">
             <div class="campo">
               <label for="buscar-solicitud">Buscar por número de ticket, equipo o cliente</label>
@@ -269,7 +309,10 @@
 
           <form id="form-registrar-equipo" class="formulario" action="#" method="post">
 
-            <!-- Grupo: datos del cliente -->
+                        <!-- ==========================================
+                 DATOS DEL CLIENTE
+                 Informacion de la persona que trae el equipo
+                 ========================================== -->
             <fieldset class="grupo-campos grupo-cliente">
               <legend>Datos del cliente</legend>
 
@@ -284,7 +327,10 @@
               </div>
             </fieldset>
 
-            <!-- Grupo: información del equipo -->
+                        <!-- ==========================================
+                 DATOS DEL EQUIPO
+                 Informacion del equipo que ingresa al taller
+                 ========================================== -->
             <fieldset class="grupo-campos grupo-equipo">
               <legend>Información del equipo</legend>
 
@@ -325,7 +371,10 @@
               </div>
             </fieldset>
 
-            <!-- Espacio reservado para mensajes de validación y confirmación -->
+                        <!-- ==========================================
+                 MENSAJES DEL FORMULARIO
+                 Informa si faltan datos o si el registro fue exitoso
+                 ========================================== -->
             <div id="mensajes-formulario" class="mensajes-formulario" role="alert" aria-live="polite"></div>
 
             <div class="acciones-formulario">
@@ -336,10 +385,10 @@
         </section>
 
 
-        <!-- =================================================
-             VISTA COMPLEMENTARIA. CONFIRMACIÓN DEL REGISTRO
-             (Complementa el recorrido de registro; no es una sexta pantalla principal)
-             ================================================= -->
+               <!-- ==========================================
+             CONFIRMACION DEL REGISTRO
+             Muestra el resultado cuando se registra un equipo
+             ========================================== -->
         <section id="vista-confirmacion-registro" class="pantalla vista-complementaria vista-confirmacion" aria-labelledby="confirmacion-titulo">
           <h1 id="confirmacion-titulo">Registro completado</h1>
           <p class="mensaje mensaje-exito" role="status">El equipo fue registrado correctamente en el prototipo.</p>
@@ -359,16 +408,18 @@
         </section>
 
 
-        <!-- =================================================
-             PANTALLA 5. DETALLE DE LA SOLICITUD
-             Se abre desde la tabla de solicitudes
-             ================================================= -->
+                <!-- ==========================================
+             DETALLE DE LA SOLICITUD
+             Muestra toda la informacion del servicio tecnico
+             ========================================== -->
         <section id="pantalla-detalle-solicitud" class="pantalla pantalla-detalle-solicitud" aria-labelledby="detalle-titulo">
           <h1 id="detalle-titulo">Detalle de la solicitud</h1>
 
           <a href="#pantalla-solicitudes" class="enlace-regresar" data-pantalla="pantalla-solicitudes">&larr; Volver a Solicitudes de servicio</a>
-
-          <!-- Datos generales -->
+            <!-- ==========================================
+                 DATOS GENERALES
+                 Informacion principal de la solicitud
+                 ========================================== -->
           <section class="detalle-seccion detalle-general" aria-labelledby="detalle-general-titulo">
             <h2 id="detalle-general-titulo">Datos generales</h2>
             <dl class="detalle-datos">
@@ -385,7 +436,10 @@
             </dl>
           </section>
 
-          <!-- Cliente -->
+                    <!-- ==========================================
+               DATOS DEL CLIENTE
+               Nombre y telefono de la persona que trae el equipo
+               ========================================== -->
           <section class="detalle-seccion detalle-cliente" aria-labelledby="detalle-cliente-titulo">
             <h2 id="detalle-cliente-titulo">Datos del cliente</h2>
             <dl class="detalle-datos">
@@ -396,7 +450,10 @@
             </dl>
           </section>
 
-          <!-- Equipo -->
+                      <!-- ==========================================
+                 DATOS DEL EQUIPO
+                 Marca, modelo y numero de serie
+                 ========================================== -->
           <section class="detalle-seccion detalle-equipo" aria-labelledby="detalle-equipo-titulo">
             <h2 id="detalle-equipo-titulo">Información del equipo</h2>
             <dl class="detalle-datos">
@@ -411,7 +468,10 @@
             </dl>
           </section>
 
-          <!-- Falla, observaciones y diagnóstico -->
+                    <!-- ==========================================
+               FALLA Y OBSERVACIONES
+               Detalles del problema y estado del equipo
+               ========================================== -->
           <section class="detalle-seccion detalle-diagnostico" aria-labelledby="detalle-diagnostico-titulo">
             <h2 id="detalle-diagnostico-titulo">Falla y diagnóstico</h2>
             <dl class="detalle-datos">
@@ -424,7 +484,10 @@
             </dl>
           </section>
 
-          <!-- Historial de estados -->
+                    <!-- ==========================================
+               HISTORIAL DE ESTADOS
+               Muestra los cambios de estado de la solicitud
+               ========================================== -->
           <section class="detalle-seccion detalle-historial" aria-labelledby="detalle-historial-titulo">
             <h2 id="detalle-historial-titulo">Historial de estados</h2>
             <ol id="lista-historial" class="historial-lista">
@@ -436,8 +499,10 @@
 
       </main>
     </div>
-
-    <!-- D. PIE DE PÁGINA -->
+      <!-- ==========================================
+           PIE DE PAGINA
+           Muestra la informacion final del sistema
+           ========================================== -->
     <footer id="pie-pagina" class="pie-pagina">
       <p>Sistema de Gestión de Servicios Técnicos — Análisis y Desarrollo de Software, SENA.</p>
       <p>Prototipo académico: los datos mostrados son ficticios.</p>

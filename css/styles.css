@@ -29,6 +29,11 @@
   --radio-pequeno: 6px;
   --sombra: 0 2px 6px rgba(33, 79, 133, 0.10);
   --ancho-menu: 240px;
+
+  /* Espacios del diseño móvil (hasta 600px). Cámbialos aquí para ajustar toda la interfaz */
+  --espacio-etiqueta: 6px;  /* entre una etiqueta y su campo */
+  --espacio-elemento: 12px; /* entre elementos del mismo bloque */
+  --espacio-seccion: 20px;  /* entre secciones distintas */
 }
 
 
@@ -395,6 +400,17 @@ textarea:focus-visible {
 
 .encabezado-usuario .boton-secundario:hover {
   background-color: rgba(255, 255, 255, 0.18);
+}
+
+/* Menú de usuario: en escritorio solo es un contenedor sin caja (display: contents),
+   así que el botón «Cerrar sesión» se ve en el encabezado como siempre, y la
+   hamburguesa permanece oculta. En celulares ocurre lo contrario (sección 14.5). */
+.menu-usuario {
+  display: contents;
+}
+
+.boton-hamburguesa {
+  display: none;
 }
 
 /* ----- Cuerpo: menú lateral + contenido ----- */
@@ -878,7 +894,7 @@ textarea:focus-visible {
   /* Etiqueta y valor en la misma línea (más compacto que apilarlos) */
   .detalle-datos {
     grid-template-columns: minmax(0, 8.5rem) minmax(0, 1fr);
-    gap: 0.45rem 0.75rem;
+    gap: var(--espacio-elemento) 0.75rem;
   }
 
   .detalle-datos dt {
@@ -908,11 +924,14 @@ textarea:focus-visible {
 @media (max-width: 600px) {
 
   /* ----- Encabezado en una cuadrícula compacta -----
-     [logo] [título        ] [Cerrar sesión]
-     [logo] [nombre usuario] [Cerrar sesión]
+     [logo] [título        ] [Menú]
+     [logo] [nombre usuario] [Menú]
      (.encabezado-usuario usa display: contents para que su nombre y su
-      botón se ubiquen directamente en la cuadrícula del encabezado) */
+      botón se ubiquen directamente en la cuadrícula del encabezado.
+      «Cerrar sesión» ya no ocupa lugar aquí: está dentro del menú desplegable
+      de la hamburguesa) */
   .encabezado-superior {
+    position: relative; /* el menú desplegable se ubica respecto al encabezado */
     display: grid;
     grid-template-columns: auto minmax(0, 1fr) auto;
     grid-template-areas:
@@ -953,11 +972,77 @@ textarea:focus-visible {
     color: rgba(255, 255, 255, 0.88);
   }
 
-  .encabezado-usuario .boton {
+  /* ----- Menú de usuario: la hamburguesa reemplaza al botón «Cerrar sesión» visible ----- */
+  .boton-hamburguesa {
     grid-area: boton;
-    min-height: 40px;
-    padding: 0.3rem 0.65rem;
-    font-size: 0.8rem;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    border-radius: var(--radio-pequeno);
+    background-color: transparent;
+    color: var(--color-blanco);
+    cursor: pointer;
+  }
+
+  .boton-hamburguesa:hover,
+  .boton-hamburguesa[aria-expanded="true"] {
+    background-color: rgba(255, 255, 255, 0.18);
+  }
+
+  .hamburguesa-linea {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background-color: currentColor;
+  }
+
+  /* Panel desplegable: cerrado por defecto; app.js le agrega la clase "abierto".
+     Con right + max-width nunca se sale de la pantalla. */
+  .menu-usuario {
+    display: none;
+    position: absolute;
+    top: calc(100% + 4px);
+    right: 0.75rem;
+    z-index: 20;
+    min-width: 11rem;
+    max-width: calc(100% - 1.5rem);
+    padding: 0.5rem;
+    background-color: var(--color-blanco);
+    border: 1px solid var(--color-borde);
+    border-radius: var(--radio);
+    box-shadow: 0 6px 18px rgba(33, 79, 133, 0.25);
+  }
+
+  .menu-usuario.abierto {
+    display: block;
+  }
+
+  .menu-usuario .boton {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  /* En el encabezado el botón era blanco sobre azul; dentro del panel blanco vuelve a ser azul */
+  .menu-usuario .boton-secundario {
+    background-color: var(--color-blanco);
+    border-color: var(--color-azul-oscuro);
+    color: var(--color-azul-oscuro);
+  }
+
+  .menu-usuario .boton-secundario:hover {
+    background-color: var(--color-azul-claro);
+  }
+
+  /* Sobre el panel blanco el indicador de foco debe ser oscuro (en el encabezado es blanco) */
+  .menu-usuario :focus-visible {
+    outline-color: var(--color-azul-oscuro);
   }
 
   /* ----- Menú: texto y relleno compactos para que las 3 opciones quepan ----- */
@@ -983,7 +1068,7 @@ textarea:focus-visible {
   }
 
   .pantalla-descripcion {
-    margin-bottom: 0.85rem;
+    margin-bottom: var(--espacio-seccion);
     font-size: 0.9rem;
   }
 
@@ -995,13 +1080,13 @@ textarea:focus-visible {
   }
 
   .accesos-rapidos {
-    gap: 0.5rem;
-    margin-bottom: 1rem;
+    gap: var(--espacio-elemento);
+    margin-bottom: var(--espacio-seccion);
   }
 
   .acciones-formulario,
   .acciones-confirmacion {
-    gap: 0.5rem;
+    gap: var(--espacio-elemento);
   }
 
   .acciones-formulario .boton,
@@ -1012,14 +1097,14 @@ textarea:focus-visible {
   }
 
   .pantalla-solicitudes > .boton {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--espacio-seccion);
   }
 
   /* ----- Panel principal: tarjetas 2 por fila y más bajas ----- */
   .tarjetas-resumen {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.6rem;
-    margin-bottom: 1rem;
+    gap: var(--espacio-elemento);
+    margin-bottom: var(--espacio-seccion);
   }
 
   .tarjeta {
@@ -1037,7 +1122,7 @@ textarea:focus-visible {
   }
 
   .solicitudes-recientes h2 {
-    margin-bottom: 0.5rem;
+    margin-bottom: var(--espacio-elemento);
     font-size: 1.05rem;
   }
 
@@ -1088,7 +1173,7 @@ textarea:focus-visible {
   .tabla tbody {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 0.7rem;
+    gap: var(--espacio-elemento);
   }
 
   /* Colores del estado (los pone el atributo data-estado de cada fila).
@@ -1308,22 +1393,38 @@ textarea:focus-visible {
 
   /* ----- Solicitudes y formulario de registro ----- */
   .filtros {
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
+    gap: var(--espacio-elemento);
+    margin-bottom: var(--espacio-elemento);
+  }
+
+  /* Sin resultados: el aviso ocupa el lugar de la lista (ya hay 20px bajo el botón) */
+  .mensaje-sin-resultados {
+    margin-top: 0;
   }
 
   .nota-obligatorios {
-    margin-bottom: 0.75rem;
+    margin-bottom: var(--espacio-seccion);
     font-size: 0.85rem;
   }
 
+  /* La descripción y la nota de obligatorios son un solo bloque de texto */
+  .pantalla-registrar-equipo .pantalla-descripcion {
+    margin-bottom: 0.5rem;
+  }
+
+  /* 20px entre grupos del formulario; 12px entre campos del mismo grupo */
   .pantalla-registrar-equipo .formulario {
-    gap: 0.85rem;
+    gap: var(--espacio-seccion);
   }
 
   .grupo-campos {
-    gap: 0.7rem;
+    gap: var(--espacio-elemento);
     padding: 0.75rem;
+  }
+
+  /* Etiqueta pegada a su campo (el espacio entre campos lo da .grupo-campos) */
+  .campo {
+    gap: var(--espacio-etiqueta);
   }
 
   .mensajes-formulario {
@@ -1333,7 +1434,7 @@ textarea:focus-visible {
 
   /* ----- Confirmación ----- */
   .datos-confirmacion {
-    margin: 1rem 0;
+    margin: var(--espacio-seccion) 0;
   }
 
   #confirmacion-ticket {
@@ -1345,18 +1446,23 @@ textarea:focus-visible {
     display: inline-flex;
     align-items: center;
     min-height: 40px;
-    margin: 0.15rem 0 0.75rem;
+    margin: 0.15rem 0 var(--espacio-elemento);
     padding: 0.35rem 0.75rem;
   }
 
   .detalle-seccion {
-    margin-bottom: 0.6rem;
-    padding: 0.65rem 0.8rem;
+    margin-bottom: var(--espacio-seccion);
+    padding: var(--espacio-elemento) 0.8rem;
     border-left-width: 4px;
   }
 
+  /* La última sección no necesita espacio extra: el panel ya tiene su relleno */
+  .detalle-seccion:last-child {
+    margin-bottom: 0;
+  }
+
   .detalle-seccion h2 {
-    margin-bottom: 0.45rem;
+    margin-bottom: var(--espacio-elemento);
     font-size: 1rem;
   }
 
@@ -1368,7 +1474,7 @@ textarea:focus-visible {
   }
 
   .detalle-diagnostico .detalle-datos dd {
-    margin-bottom: 0.45rem;
+    margin-bottom: var(--espacio-elemento);
   }
 
   .detalle-diagnostico .detalle-datos dd:last-child {
@@ -1376,7 +1482,7 @@ textarea:focus-visible {
   }
 
   .historial-lista li {
-    padding: 0.3rem 0 0.3rem 0.75rem;
+    padding: calc(var(--espacio-elemento) / 2) 0 calc(var(--espacio-elemento) / 2) 0.75rem;
     font-size: 0.9rem;
   }
 
